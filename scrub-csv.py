@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- utf-8 -*-
+
 import os
 import sys
 import csv
@@ -8,6 +9,7 @@ import string
 import random
 import datetime
 from datetime import date
+
 
 def random_upper_letter(m):
     return random.choice(string.ascii_uppercase)
@@ -50,22 +52,18 @@ def scrub_field(column_name, text):
 
 
 def scrub_csv(input_filename, output_filename):
-    fieldnames=[]
     with open(input_filename, 'r') as csv_input:
         with open(output_filename, 'w', newline='') as csv_output:
             reader = csv.DictReader(csv_input)
             writer = None
-            i = 0
+            writer = csv.DictWriter(csv_output, fieldnames=reader.fieldnames)
+            writer.writeheader()
             for row in reader:
                 scrubbed_row={}
-                if i == 0:
-                    fieldnames=row.keys()
-                    writer = csv.DictWriter(csv_output, fieldnames=fieldnames)
-                    writer.writeheader()
-                    i += 1
                 for k,v in row.items():
                     scrubbed_row[k] = scrub_field(k,v)
                 writer.writerow(scrubbed_row)
+
 
 if __name__ == '__main__':
     n = len(sys.argv)
