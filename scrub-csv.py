@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# -*- utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -55,8 +55,7 @@ def scrub_csv(input_filename, output_filename):
     with open(input_filename, 'r') as csv_input:
         with open(output_filename, 'w', newline='') as csv_output:
             reader = csv.DictReader(csv_input)
-            writer = None
-            writer = csv.DictWriter(csv_output, fieldnames=reader.fieldnames)
+            writer = csv.DictWriter(csv_output, fieldnames=reader.fieldnames, quoting=csv.QUOTE_ALL)
             writer.writeheader()
             for row in reader:
                 scrubbed_row={}
@@ -67,14 +66,21 @@ def scrub_csv(input_filename, output_filename):
 
 if __name__ == '__main__':
     n = len(sys.argv)
+
     if n <= 1:
         print("Input file name is required. e.g. ./scrub-csv.py file-input.csv")
         exit
+
     input_filename = sys.argv[1]
+    inputext = os.path.splitext(input_filename)[1]
+
     if n > 2:
         output_filename = sys.argv[2]
     else:
         output_filename = os.path.splitext(input_filename)
         output_filename = output_filename[0] + '-scrubbed' + output_filename[1]
-    # print(input_filename, output_filename)
-    scrub_csv(input_filename, output_filename)
+
+    if inputext == '.csv':
+        scrub_csv(input_filename, output_filename)
+    else:
+        print(f"File extension {inputext} not supported.")
