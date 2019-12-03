@@ -64,11 +64,18 @@ def scrub_csv(input_filename, output_filename):
                 writer.writerow(scrubbed_row)
 
 
+def scrub_txt(input_filename, output_filename):
+    with open(input_filename, 'r') as txt_input:
+        with open(output_filename, 'w', newline='') as txt_output:
+            for line in txt_input.readlines():
+                txt_output.writeline()
+
+
 if __name__ == '__main__':
     n = len(sys.argv)
 
     if n <= 1:
-        print("Input file name is required. e.g. ./scrub-csv.py file-input.csv")
+        print("Input file name is required. e.g. ./scrub.py file-input.csv")
         exit
 
     input_filename = sys.argv[1]
@@ -82,5 +89,7 @@ if __name__ == '__main__':
 
     if inputext == '.csv':
         scrub_csv(input_filename, output_filename)
+    elif inputext == '.txt':
+        scrub_txt(input_filename, output_filename)
     else:
         print(f"File extension {inputext} not supported.")
